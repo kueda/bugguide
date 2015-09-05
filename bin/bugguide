@@ -1,0 +1,43 @@
+#!/usr/bin/env ruby
+require 'commander/import'
+require 'bugguide'
+
+program :name, 'BugGuide'
+program :version, '1.0.0'
+program :description, 'Command-line tool for scraping data from http://bugguide.net'
+
+command :checklist do |c|
+  c.syntax = "bugguide checklist [taxon name]"
+  c.option "-s", '--state STATE', String, '2-letter code of a US state or CA province'
+  c.option "-c", '--county COUNTY', String, "US county, full name, e.g. Alameda, Middlesex."
+  c.action do |args, opts|
+    taxa = BugGuide::Taxon.search(args[0])
+    if taxa.size == 0
+      abort "No matching taxa found"
+    elsif taxa.size == 1
+      taxon = taxa.first
+    else
+      puts "Multiple taxon results, choose one (hit ENTER to choose the first)"
+      taxa.each_with_index do |taxon, i|
+        say "[#{i}] #{taxon.common_name} (#{taxon.scientific_name}) http://bugguide.net/node/view/#{taxon.id}"
+      end
+      choice = ask "Choice: "
+      taxon = taxa[choice.to_i]
+      taxon = taxa.first if choice.blank?
+    end
+    abort "You must choose a taxon" if taxon.blank?
+    photos = begin
+      BugGuide::Photo.search(
+        taxon: taxon.id, 
+        user: opts.user, 
+        state: opts.state, 
+        county: opts.county
+      )
+    rescue BugGuide::TooManyResultsException
+      abort "Too many results. Try refining your query."
+    end
+    puts "Found #{photos.size} taxa:"
+    puts
+    puts photos.map{|p| p.taxon.scientific_name}.uniq.sort.join("\n")
+  end
+end
