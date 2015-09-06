@@ -8,13 +8,16 @@ class BugGuide::Taxon
   end
 
   def name=(new_name)
+    name_pattern = /[\w\s\-\'\.]+/
     if new_name =~ /subgenus/i
       self.scientific_name = new_name.gsub(/subgenus/i, '')[/[^\(]+/, 0]
-    elsif matches = new_name.match(/([\w\s]+) \(([\w\s]+)\)/)
+    elsif matches = new_name.match(/group .*\((#{name_pattern})\)/i)
+      self.scientific_name = matches[1]
+    elsif matches = new_name.match(/(#{name_pattern}) \((#{name_pattern})\)/)
       self.scientific_name ||= matches[1]
       self.common_name ||= matches[2]
     else
-      self.scientific_name = new_name.strip
+      self.scientific_name = new_name[/[^\(]+/, 0]
     end
     @name = new_name.strip if new_name
   end

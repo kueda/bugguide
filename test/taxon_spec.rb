@@ -15,6 +15,15 @@ describe BugGuide::Taxon do
       t = BugGuide::Taxon.new(name: "Trichocnemis spiculatus (Ponderous Borer)")
       t.common_name.must_equal 'Ponderous Borer'
     end
+    it "should parse scientific name from group name" do
+      t = BugGuide::Taxon.new(name: "fusca group subsericea (Formica subsericea)")
+      t.scientific_name.must_equal 'Formica subsericea'
+    end
+    it "should parse names from name with parens and hyphen" do
+      t = BugGuide::Taxon.new(name: "Trichocnemis (Big-headed Borers)")
+      t.common_name.must_equal 'Big-headed Borers'
+      t.scientific_name.must_equal 'Trichocnemis'
+    end
     it "should remove the word 'subgenus' from scientific name" do
       t = BugGuide::Taxon.new(name: 'subgenus Prionus lecontei (Prionus lecontei)')
       t.scientific_name.must_equal 'Prionus lecontei'

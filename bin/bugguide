@@ -10,6 +10,7 @@ command :checklist do |c|
   c.syntax = "bugguide checklist [taxon name]"
   c.option "-s", '--state STATE', String, '2-letter code of a US state or CA province'
   c.option "-c", '--county COUNTY', String, "US county, full name, e.g. Alameda, Middlesex."
+  c.option "-f", '--format table|csv', String, "Output format"
   c.action do |args, opts|
     taxa = BugGuide::Taxon.search(args[0])
     if taxa.size == 0
@@ -36,8 +37,23 @@ command :checklist do |c|
     rescue BugGuide::TooManyResultsException
       abort "Too many results. Try refining your query."
     end
-    puts "Found #{photos.size} taxa:"
-    puts
-    puts photos.map{|p| p.taxon.scientific_name}.uniq.sort.join("\n")
+    longest_name = ''
+    unique_photos = photos.uniq{|p| 
+      longest_name = p.taxon.scientific_name if p.taxon.scientific_name.size > longest_name.size
+      p.taxon.scientific_name
+    }.sort{|a,b| a.taxon.scientific_name <=> b.taxon.scientific_name}
+    if opts.format == 'csv'
+      puts ["TAXON ID", "NAME", "PHOTO ID"].join(',')
+      unique_photos.each do |p|
+        puts [p.taxon.id, p.taxon.scientific_name, p.id].join(',')
+      end
+    else
+      puts "Found #{photos.size} photos of #{unique_photos.size} taxa:"
+      puts
+      puts ["TAXON ID".ljust(10), "NAME".ljust(longest_name.size+2), "PHOTO ID"].join(' ')
+      unique_photos.each do |p|
+        puts [p.taxon.id.to_s.ljust(10), p.taxon.scientific_name.ljust(longest_name.size+2), p.id].join(' ')
+      end
+    end
   end
 end

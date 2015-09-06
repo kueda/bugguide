@@ -57,7 +57,7 @@ class BugGuide::Photo < OpenStruct
           city_location: tr.children[6].text,
           taxon: BugGuide::Taxon.new(
             name: tr.children[7].text,
-            id: tr.children[7].css('a')[0][:href].to_s[/\d+$/, 1],
+            id: tr.children[7].css('a')[0][:href].to_s[/\d+$/, 0],
             url: tr.children[7].css('a')[0][:href]
           )
         )
