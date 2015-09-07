@@ -1,3 +1,4 @@
+#encoding: utf-8
 require 'test_helper'
 
 # http://docs.seattlerb.org/minitest/Minitest/Expectations.html
@@ -33,6 +34,7 @@ describe BugGuide::Taxon do
       t.common_name.wont_equal 'Prionus lecontei'
     end
   end
+
   describe "search" do
     it "should return BugGuide::Taxon object" do
       BugGuide::Taxon.search('ants').first.must_be_instance_of BugGuide::Taxon
@@ -40,6 +42,37 @@ describe BugGuide::Taxon do
     it "should include an exact match" do
       exact = BugGuide::Taxon.search('ants').detect{|t| t.name == 'Formicidae'}
       exact.wont_be :blank?
+    end
+  end
+
+  describe "ancestors" do
+    before do
+      @taxon = BugGuide::Taxon.new(id: 185, name: 'Bombyliidae')
+    end
+    it "should order them from highest to lowest" do
+      @taxon.ancestors.first.scientific_name.must_equal "Arthropoda"
+      @taxon.ancestors.last.scientific_name.must_equal "Asiloidea"
+    end
+    it "should consist of Taxon objects" do
+      @taxon.ancestors.first.must_be_instance_of BugGuide::Taxon
+    end
+    it "should return objects with ranks" do
+      @taxon.ancestors.first.rank.must_equal 'phylum'
+    end
+  end
+
+  describe "with DarwinCore compliance" do
+    before do
+      @taxon = BugGuide::Taxon.new(id: 185, name: 'Bombyliidae')
+      @taxon.ancestors
+    end
+
+    it "should respond to taxonRank" do
+      @taxon.taxonRank.must_equal 'family'
+    end
+
+    it "should respond to higherClassification" do
+      @taxon.higherClassification.split('|').size.must_be :>, 0
     end
   end
 end

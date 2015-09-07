@@ -1,4 +1,13 @@
-class BugGuide::Photo < OpenStruct
+class BugGuide::Photo
+  attr_accessor :thumbnail_url, :id, :url, :title, :date, :state, :county, :city_location, :taxon
+
+  def initialize(options = {})
+    options.each do |k,v|
+      send("#{k}=", v)
+    end
+  end
+
+
   # Search for photos. This method depends on BugGuide's Advanced Search
   # functionality, which will bail if your search returns too much results, so
   # this will throw an exception in that case that you should be prepared to

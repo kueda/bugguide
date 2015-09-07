@@ -1,5 +1,7 @@
+#encoding: utf-8
 class BugGuide::Taxon
-  attr_accessor :id, :name, :scientific_name, :common_name, :url
+  NAME_PATTERN = /[\w\s\-\'\.]+/
+  attr_accessor :id, :name, :scientific_name, :common_name, :url, :rank
 
   def initialize(options = {})
     options.each do |k,v|
@@ -8,16 +10,15 @@ class BugGuide::Taxon
   end
 
   def name=(new_name)
-    name_pattern = /[\w\s\-\'\.]+/
     if new_name =~ /subgenus/i
-      self.scientific_name = new_name.gsub(/subgenus/i, '')[/[^\(]+/, 0]
-    elsif matches = new_name.match(/group .*\((#{name_pattern})\)/i)
-      self.scientific_name = matches[1]
-    elsif matches = new_name.match(/(#{name_pattern}) \((#{name_pattern})\)/)
+      self.scientific_name ||= new_name.gsub(/subgenus/i, '')[/[^\(]+/, 0]
+    elsif matches = new_name.match(/group .*\((#{NAME_PATTERN})\)/i)
+      self.scientific_name ||= matches[1]
+    elsif matches = new_name.match(/(#{NAME_PATTERN}) \((#{NAME_PATTERN})\)/)
       self.scientific_name ||= matches[1]
       self.common_name ||= matches[2]
     else
-      self.scientific_name = new_name[/[^\(]+/, 0]
+      self.scientific_name ||= new_name[/[^\(]+/, 0]
     end
     @name = new_name.strip if new_name
   end
@@ -28,6 +29,44 @@ class BugGuide::Taxon
 
   def common_name=(new_name)
     @common_name = new_name.strip if new_name
+  end
+
+  def rank=(new_rank)
+    @rank = new_rank.downcase
+    @rank = nil if @rank == 'no taxon'
+  end
+
+  def rank
+    return @rank if @rank
+    @rank = taxonomy_html.css('.bgpage-roots a').last['title'].downcase
+  end
+
+  def ancestors
+    return @ancestors if @ancestors
+    @ancestors = []
+    nbsp = Nokogiri::HTML("&nbsp;").text
+    @ancestors = taxonomy_html.css('.bgpage-roots a').map do |a|
+      next unless a['href'] =~ /node\/view\/\d+\/tree/
+      t = BugGuide::Taxon.new(
+        id: a['href'].split('/')[-2],
+        name: a.text.gsub(nbsp, ' '),
+        url: a['href'],
+        rank: a['title']
+      )
+      if name_matches = t.name.match(/(#{NAME_PATTERN})\s+\((#{NAME_PATTERN})\)/)
+        t.common_name = name_matches[1]
+        t.scientific_name = name_matches[2]
+      end
+      next if t.scientific_name == scientific_name
+      t
+    end.compact
+  end
+
+  def taxonomy_html
+    return @taxonomy_html if @taxonomy_html
+    open("http://bugguide.net/node/view/#{id}/tree") do |response|
+      @taxonomy_html = Nokogiri::HTML(response.read)
+    end
   end
 
   # http://bugguide.net/adv_search/taxon.php?q=Sphecidae returns
@@ -54,5 +93,9 @@ class BugGuide::Taxon
   alias_method :taxonID, :id
   alias_method :scientificName, :scientific_name
   alias_method :vernacularName, :common_name
+  alias_method :taxonRank, :rank
+  def higherClassification
+    ancestors.map(&:scientific_name).join(' | ')
+  end
 
 end
