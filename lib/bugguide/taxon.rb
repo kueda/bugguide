@@ -50,4 +50,9 @@ class BugGuide::Taxon
     taxa
   end
 
+  # DarwinCore mapping
+  alias_method :taxonID, :id
+  alias_method :scientificName, :scientific_name
+  alias_method :vernacularName, :common_name
+
 end

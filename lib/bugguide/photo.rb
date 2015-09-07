@@ -65,4 +65,21 @@ class BugGuide::Photo < OpenStruct
     end
     photos
   end
+
+  # DarwinCore Simple Multimedia mapping
+  # http://rs.gbif.org/terms/1.0/Multimedia
+  alias_method :identifier, :id
+  alias_method :references, :url
+  alias_method :created, :date
+  def type
+    "StillImage"
+  end
+
+  def format
+    "image/jpeg"
+  end
+
+  def publisher
+    "BugGuide"
+  end
 end
