@@ -64,6 +64,10 @@ describe BugGuide::Taxon do
     it "should return objects with ranks" do
       @taxon.ancestors.first.rank.must_equal 'phylum'
     end
+    it "should strip out extraneous stuff from names" do
+      names = BugGuide::Taxon.search('Apis mellifera').first.ancestors.map(&:scientific_name)
+      names.detect{|n| n =~ /\s-\s/}.must_be_nil
+    end
   end
 
   describe "with DarwinCore compliance" do

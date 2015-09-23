@@ -57,6 +57,9 @@ class BugGuide::Taxon
       if name_matches = t.name.match(/(#{NAME_PATTERN})\s+\((#{NAME_PATTERN})\)/)
         t.common_name = name_matches[1]
         t.scientific_name = name_matches[2]
+      elsif name_matches = t.name.match(/(#{NAME_PATTERN})\s+\-\s+(#{NAME_PATTERN})/)
+        t.common_name = name_matches[2]
+        t.scientific_name = name_matches[1]
       end
       next if t.scientific_name == scientific_name
       t
