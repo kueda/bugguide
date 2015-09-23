@@ -50,6 +50,24 @@ describe BugGuide::Taxon do
     end
   end
 
+  describe "find" do
+    before do
+      @taxon = BugGuide::Taxon.find(3080) # Apis mellifera
+    end
+    it "should load a name" do
+      @taxon.name.wont_be_nil
+    end
+    it "should load a scientific_name" do
+      @taxon.scientific_name.must_equal 'Apis mellifera'
+    end
+    it "should load a common_name" do
+      @taxon.common_name.wont_be_nil
+    end
+    it "should load a rank" do
+      @taxon.rank.must_equal 'species'
+    end
+  end
+
   describe "ancestors" do
     before do
       @taxon = BugGuide::Taxon.new(id: 185, name: 'Bombyliidae')

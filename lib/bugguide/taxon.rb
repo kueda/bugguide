@@ -1,7 +1,7 @@
 #encoding: utf-8
 class BugGuide::Taxon
   NAME_PATTERN = /[\w\s\-\'\.]+/
-  attr_accessor :id, :name, :scientific_name, :common_name, :url, :rank
+  attr_accessor :id, :name, :scientific_name, :common_name, :url
 
   def initialize(options = {})
     options.each do |k,v|
@@ -91,6 +91,14 @@ class BugGuide::Taxon
       end
     end
     taxa
+  end
+
+  def self.find(id)
+    taxon = BugGuide::Taxon.new(id: id)
+    taxon.name = taxon.taxonomy_html.css('.node-title h1').text
+    taxon.scientific_name = taxon.taxonomy_html.css('.node-title i').text
+    taxon.common_name = taxon.taxonomy_html.css('.node-title').text.split('-').last
+    taxon
   end
 
   # DarwinCore mapping
