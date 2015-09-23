@@ -3,6 +3,7 @@ require 'test_helper'
 
 # http://docs.seattlerb.org/minitest/Minitest/Expectations.html
 describe BugGuide::Taxon do
+
   describe "name parsing" do
     it "should set scientific name to name by default" do
       t = BugGuide::Taxon.new(name: 'Trichocnemis spiculatus')
@@ -42,6 +43,10 @@ describe BugGuide::Taxon do
     it "should include an exact match" do
       exact = BugGuide::Taxon.search('ants').detect{|t| t.name == 'Formicidae'}
       exact.wont_be :blank?
+    end
+    it "should return taxa with URLs" do
+      t = BugGuide::Taxon.search('ants').first
+      t.url.must_match /bugguide\.net.+#{t.id}/
     end
   end
 

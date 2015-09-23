@@ -7,6 +7,7 @@ class BugGuide::Taxon
     options.each do |k,v|
       send("#{k}=", v)
     end
+    self.url ||= "http://bugguide.net/node/view/#{id}"
   end
 
   def name=(new_name)

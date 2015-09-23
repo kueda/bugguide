@@ -1,3 +1,4 @@
+#encoding: utf-8
 class BugGuide::Photo
   attr_accessor :thumbnail_url, :id, :url, :title, :date, :state, :county, :city_location, :taxon
 
@@ -48,7 +49,7 @@ class BugGuide::Photo
     photos = []
     # puts "fetching #{url}"
     open(url) do |response|
-      html = Nokogiri::HTML(response.read)
+      html = Nokogiri::HTML(response.read.encode('UTF-8'))
       if html.to_s =~ /Too many results \(\d+\)/
         raise BugGuide::TooManyResultsException
       end
