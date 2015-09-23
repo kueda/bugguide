@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # BugGuide
 
 http://stackoverflow.com/questions/3307209/what-is-the-modern-way-to-structure-a-ruby-gem
@@ -44,3 +45,7 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/[USERN
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
 
+=======
+# bugguide
+Ruby gem for scraping data from BugGuide.net
+>>>>>>> 246dbbb27cbe98ef3afe027cb4052712d55570f8
