@@ -1,4 +1,8 @@
 #encoding: utf-8
+#
+# Represents a single photo on BugGuide. Several methods are intended for
+# compatability with the DarwinCore SimpleMultimedia extention (http://rs.gbif.org/terms/1.0/Multimedia).
+#
 class BugGuide::Photo
   attr_accessor :thumbnail_url, :id, :url, :title, :date, :state, :county, :city_location, :taxon
 
@@ -79,17 +83,27 @@ class BugGuide::Photo
 
   # DarwinCore Simple Multimedia mapping
   # http://rs.gbif.org/terms/1.0/Multimedia
+
+  # DarwinCore Simple Multimedia identifier
   alias_method :identifier, :id
+
+  # DarwinCore Simple Multimedia references (basically just a URL)
   alias_method :references, :url
+
+  # DarwinCore Simple Multimedia date created
   alias_method :created, :date
+
+  # DarwinCore Simple Multimedia media type
   def type
     "StillImage"
   end
 
+  # DarwinCore Simple Multimedia media format, aka MIME type
   def format
     "image/jpeg"
   end
 
+  # DarwinCore Simple Multimedia publisher, always BugGuide in this case
   def publisher
     "BugGuide"
   end
