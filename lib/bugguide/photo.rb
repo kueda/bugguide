@@ -33,6 +33,7 @@ class BugGuide::Photo
     raise BugGuide::NoParametersException if options.blank?
     url = "http://bugguide.net/adv_search/bgsearch.php?"
     options.stringify_keys!
+    headers = options[:headers] || {}
     params = []
     %w(user taxon description county city_location adult immature male female representative).each do |param|
       next if options[param] != false && options[param].blank?
@@ -48,7 +49,7 @@ class BugGuide::Photo
     url += params.join('&')
     photos = []
     # puts "fetching #{url}"
-    open(url) do |response|
+    open(url, headers) do |response|
       html = Nokogiri::HTML(response.read.encode('UTF-8'))
       if html.to_s =~ /Too many results \(\d+\)/
         raise BugGuide::TooManyResultsException

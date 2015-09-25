@@ -75,11 +75,12 @@ class BugGuide::Taxon
 
   # http://bugguide.net/adv_search/taxon.php?q=Sphecidae returns
   # 117327||Apoid Wasps (Apoidea)- traditional Sphecidae|2302 135|Sphecidae|Thread-waisted Wasps|2700 
-  def self.search(name)
+  def self.search(name, options = {})
     url = "http://bugguide.net/adv_search/taxon.php?q=#{name}"
+    headers = options[:headers] || {}
     f = open(url)
     taxa = []
-    open(url) do |f|
+    open(url, headers) do |f|
       f.read.split("\n").each do |row|
         row = row.split('|').compact.map(&:strip)
         taxa << BugGuide::Taxon.new(

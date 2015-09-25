@@ -48,6 +48,10 @@ describe BugGuide::Taxon do
       t = BugGuide::Taxon.search('ants').first
       t.url.must_match /bugguide\.net.+#{t.id}/
     end
+    it "should accept headers" do
+      ants = BugGuide::Taxon.search('ants', "User-Agent" => "BugGuide Ruby Gem / #{BugGuide::VERSION}")
+      ants.detect{|t| t.name == 'Formicidae'}.wont_be :blank?
+    end
   end
 
   describe "find" do
