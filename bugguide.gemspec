@@ -26,9 +26,9 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "minitest", "~> 0"
-  spec.add_development_dependency "m", "~> 1.3"
-  spec.add_runtime_dependency 'nokogiri', "~> 0"
-  spec.add_runtime_dependency 'activesupport', "~> 0"
-  spec.add_runtime_dependency 'commander', "~> 0"
+  spec.add_development_dependency "minitest", "~> 5.8"
+  spec.add_development_dependency "m", "~> 1.4"
+  spec.add_runtime_dependency 'nokogiri', "~> 1.6"
+  spec.add_runtime_dependency 'activesupport', "~> 4.2"
+  spec.add_runtime_dependency 'commander', "~> 4.3"
 end
