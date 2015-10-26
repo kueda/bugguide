@@ -91,8 +91,9 @@ describe BugGuide::Photo do
       results.map(&:id).wont_include @photo_id_kueda_promyrmekiaphila_male
       results.map(&:id).must_include @photo_id_kueda_anastranglia_female
     end
-
-    # I don't really know what this mean
-    it "should filter by representative"
+    it "should URI escape bad queries" do
+      results = BugGuide::Photo.search(description: 'Elachista new #2 blk, 3 silvery wht')
+      results.must_be_empty
+    end
   end
 end

@@ -50,7 +50,7 @@ class BugGuide::Photo
     states = [options['state'], options['location']].flatten.compact.uniq
     params << states.map{|s| "location[]=#{s}"} unless states.blank?
     params << [options['month']].flatten.map{|s| "month[]=#{s}"} unless options['month'].blank?
-    url += params.join('&')
+    url += URI.escape( params.join('&') )
     photos = []
     # puts "fetching #{url}"
     open(url, headers) do |response|

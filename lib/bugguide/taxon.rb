@@ -90,7 +90,7 @@ class BugGuide::Taxon
   def self.search(name, options = {})
     # For reference, http://bugguide.net/adv_search/taxon.php?q=Sphecidae returns
     # 117327||Apoid Wasps (Apoidea)- traditional Sphecidae|2302 135|Sphecidae|Thread-waisted Wasps|2700 
-    url = "http://bugguide.net/adv_search/taxon.php?q=#{name}"
+    url = "http://bugguide.net/adv_search/taxon.php?q=#{URI.escape(name)}"
     headers = options[:headers] || {}
     f = open(url)
     taxa = []

@@ -15,7 +15,7 @@ locally:
 git clone git@github.com:kueda/bugguide.git
 cd bugguide
 gem build bugguide.gemspec
-gem install bugguide-0.1.0.gem
+gem install bugguide-x.x.x.gem
 ```
 
 And of course bundler makes it pretty easy:

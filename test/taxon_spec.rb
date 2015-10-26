@@ -52,6 +52,10 @@ describe BugGuide::Taxon do
       ants = BugGuide::Taxon.search('ants', "User-Agent" => "BugGuide Ruby Gem / #{BugGuide::VERSION}")
       ants.detect{|t| t.name == 'Formicidae'}.wont_be :blank?
     end
+    it "should URI escape bad queries" do
+      results = BugGuide::Taxon.search('Elachista new #2 blk, 3 silvery wht')
+      results.must_be_empty
+    end
   end
 
   describe "find" do
