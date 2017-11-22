@@ -35,7 +35,7 @@ class BugGuide::Photo
   #  representative: Boolean. It's not clear to me what this means on BugGuide.
   def self.search(options = {})
     raise BugGuide::NoParametersException if options.blank?
-    url = "http://bugguide.net/adv_search/bgsearch.php?"
+    url = "https://bugguide.net/adv_search/bgsearch.php?"
     options.stringify_keys!
     headers = options[:headers] || {}
     params = []

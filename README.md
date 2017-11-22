@@ -1,10 +1,10 @@
 # BugGuide
 
-Ruby gem for scraping data from [BugGuide.net](http://bugguide.net), an
+Ruby gem for scraping data from [BugGuide.net](https://bugguide.net), an
 excellent online community of entomologists sharing information about
 terrestrial arthropods in North America. Sadly, BugGuide doesn't have an API, so
 this gem is little more than a scraper focusing on their [advanced search
-feature](http://bugguide.net/adv_search/bgsearch.php).
+feature](https://bugguide.net/adv_search/bgsearch.php).
 
 # Installation
 

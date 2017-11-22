@@ -17,7 +17,7 @@ class BugGuide::Taxon
     options.each do |k,v|
       send("#{k}=", v)
     end
-    self.url ||= "http://bugguide.net/node/view/#{id}"
+    self.url ||= "https://bugguide.net/node/view/#{id}"
   end
 
   def name=(new_name)
@@ -81,16 +81,16 @@ class BugGuide::Taxon
   # HTML source of the taxon's taxonomy page on BugGuide as a Nokogiri document
   def taxonomy_html
     return @taxonomy_html if @taxonomy_html
-    open("http://bugguide.net/node/view/#{id}/tree") do |response|
+    open("https://bugguide.net/node/view/#{id}/tree") do |response|
       @taxonomy_html = Nokogiri::HTML(response.read)
     end
   end
 
   # Search for taxa, returns matching BugGuide::Taxon instances
   def self.search(name, options = {})
-    # For reference, http://bugguide.net/adv_search/taxon.php?q=Sphecidae returns
+    # For reference, https://bugguide.net/adv_search/taxon.php?q=Sphecidae returns
     # 117327||Apoid Wasps (Apoidea)- traditional Sphecidae|2302 135|Sphecidae|Thread-waisted Wasps|2700 
-    url = "http://bugguide.net/adv_search/taxon.php?q=#{URI.escape(name)}"
+    url = "https://bugguide.net/adv_search/taxon.php?q=#{URI.escape(name)}"
     headers = options[:headers] || {}
     f = open(url)
     taxa = []

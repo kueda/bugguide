@@ -3,8 +3,8 @@ require 'commander/import'
 require 'bugguide'
 
 program :name, 'BugGuide'
-program :version, '1.0.0'
-program :description, 'Command-line tool for scraping data from http://bugguide.net'
+program :version, BugGuide::VERSION
+program :description, 'Command-line tool for scraping data from https://bugguide.net'
 
 command :checklist do |c|
   c.syntax = "bugguide checklist [taxon name]"
@@ -20,7 +20,7 @@ command :checklist do |c|
     else
       puts "Multiple taxon results, choose one (hit ENTER to choose the first)"
       taxa.each_with_index do |taxon, i|
-        say "[#{i}] #{taxon.common_name} (#{taxon.scientific_name}) http://bugguide.net/node/view/#{taxon.id}"
+        say "[#{i}] #{taxon.common_name} (#{taxon.scientific_name}) https://bugguide.net/node/view/#{taxon.id}"
       end
       choice = ask "Choice: "
       taxon = taxa[choice.to_i]
