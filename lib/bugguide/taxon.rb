@@ -11,13 +11,17 @@
 #
 class BugGuide::Taxon
   NAME_PATTERN = /[\w\s\-\'\.]+/
-  attr_accessor :id, :name, :scientific_name, :common_name, :url
+  attr_accessor :id, :url
+  attr_reader :name, :scientific_name, :common_name
 
   def initialize(options = {})
     options.each do |k,v|
       send("#{k}=", v)
     end
     self.url ||= "https://bugguide.net/node/view/#{id}"
+    @taxonomy_html = nil
+    @rank = nil
+    @ancestors = nil
   end
 
   def name=(new_name)
@@ -90,9 +94,8 @@ class BugGuide::Taxon
   def self.search(name, options = {})
     # For reference, https://bugguide.net/adv_search/taxon.php?q=Sphecidae returns
     # 117327||Apoid Wasps (Apoidea)- traditional Sphecidae|2302 135|Sphecidae|Thread-waisted Wasps|2700 
-    url = "https://bugguide.net/adv_search/taxon.php?q=#{URI.escape(name)}"
+    url = "https://bugguide.net/adv_search/taxon.php?q=#{URI::Parser.new.escape(name)}"
     headers = options[:headers] || {}
-    f = open(url)
     taxa = []
     open(url, headers) do |f|
       f.read.split("\n").each do |row|

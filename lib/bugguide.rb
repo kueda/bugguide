@@ -1,3 +1,4 @@
+require 'cgi'
 require 'ostruct'
 require 'nokogiri'
 require 'open-uri'

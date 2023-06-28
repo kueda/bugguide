@@ -50,7 +50,7 @@ class BugGuide::Photo
     states = [options['state'], options['location']].flatten.compact.uniq
     params << states.map{|s| "location[]=#{s}"} unless states.blank?
     params << [options['month']].flatten.map{|s| "month[]=#{s}"} unless options['month'].blank?
-    url += URI.escape( params.join('&') )
+    url += URI::Parser.new.escape( params.join('&') )
     photos = []
     # puts "fetching #{url}"
     open(url, headers) do |response|
@@ -58,7 +58,6 @@ class BugGuide::Photo
       if html.to_s =~ /Too many results \(\d+\)/
         raise BugGuide::TooManyResultsException
       end
-      names = []
       html.css('body > table tr').each do |tr|
         next if tr.css('th').size > 0
         photos << BugGuide::Photo.new(
